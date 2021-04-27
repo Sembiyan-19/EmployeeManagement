@@ -1,0 +1,30 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+
+   <class name = "com.ideas2it.employeeManagement.model.Address" table = "address">
+      
+      <meta attribute = "class-description">
+         This class contains the employee detail. 
+      </meta>
+      
+      <id name = "id" type = "int" column = "address_id">
+         <generator class="increment"/>
+      </id>
+      
+      <property name = "doorNumber" column = "door_number" type = "string"/>
+      <property name = "street" column = "street" type = "string"/>
+      <property name = "city" column = "city" type = "string"/>
+      <property name = "pincode" column = "pincode" type = "string"/>
+	  <property name = "state" column = "state" type = "string"/>
+	  <property name = "country" column = "country" type = "string"/>
+	  <property name = "type" column = "type" type = "string"/>
+	  <property name = "isDeleted" column = "is_deleted" type = "boolean"/>
+	  <many-to-one name = "employee" column = "employee_id" class = "com.ideas2it.employeeManagement.model.Employee"/>
+	 
+   </class>
+
+</hibernate-mapping>
