@@ -60,7 +60,7 @@ public class ProjectServiceImpl implements ProjectService {
      * {@inheritDoc}
      */
     @Override
-    public boolean deleteProjectDetails(int projectId) {
+    public boolean deleteProject(int projectId) {
         Project project = projectDao.retrieveProject(projectId);
         project.setIsDeleted(true);
         project.setEmployees(null);
@@ -131,8 +131,9 @@ public class ProjectServiceImpl implements ProjectService {
     public List<String> getAllProjects() {
         List<String> projects = new ArrayList<String>();
         for (Project project : projectDao.getAllProjects()) {
-            projects.add(project.toString() + getSpacing());
+            projects.add(project.toString());
         }
+        System.out.println(projects);
         return projects;
     }
 

@@ -2,10 +2,13 @@
 package com.ideas2it.projectManagement.dao.impl;
 
 import java.util.List;
+
+import org.hibernate.Criteria;
 //import org.hibernate.Criteria;
 //import org.hibernate.criterion.Restrictions;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 
 import com.ideas2it.projectManagement.dao.ProjectDao;
 import com.ideas2it.projectManagement.model.Project;
@@ -89,7 +92,7 @@ public class ProjectDaoImpl implements ProjectDao {
      */
     @Override
     public List<Project> getAllProjects() {
-        /*List<Project> projects = null;
+        List<Project> projects = null;
         Session session = null;
         try {
             SessionFactory sessionFactory = singleton.getSessionFactory();
@@ -103,7 +106,7 @@ public class ProjectDaoImpl implements ProjectDao {
         } finally {
             session.close();
         }
-        return projects;*/
-    	return null;
+        return projects;
+    	//return null;
     }
 }

@@ -7,16 +7,15 @@
 <title>Insert title here</title>
 </head>
 <body>
-    <a href = "index.jsp"><button>Home</button></a>
     <h1>Enter the project details</h1>
-    <form action="project?action=add" method = "post">
-        Project id: <input type = "number" name = "id"><br><br>
+    <form action="project?action=update&id=<%= request.getParameter("id") %>" method = "post">
+        Project id : <%= request.getParameter("id") %><br><br>
         Project name: <input type = "text" name = "name"><br><br>
         Project manager: <input type = "text" name = "manager"><br><br>
         Department: <input type = "text" name = "department"><br><br>
         <input type = "submit"> 
     </form>
     <br>
-    <a href="projectHome.jsp"><button>Back</button></a>
+    <a href="displayProject.jsp"><button>Back</button></a>
 </body>
 </html>

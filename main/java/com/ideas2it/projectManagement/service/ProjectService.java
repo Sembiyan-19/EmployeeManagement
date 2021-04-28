@@ -48,7 +48,7 @@ public interface ProjectService {
      * @return        
      *     true if details are successfully deleted else returns false
      */
-    public boolean deleteProjectDetails(int projectId);
+    public boolean deleteProject(int projectId);
 
     /**
      * Updates the project details such as project name, manager,
