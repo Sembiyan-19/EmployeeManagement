@@ -9,11 +9,6 @@
 </head>
 <body>
     <a href = "index.jsp"><button>Home</button></a><br><br><br>
-    <form action="project?action=view" method = "post">
-        Enter the project Id: <input type = "number" name = "id">
-        <input type = "submit">
-    </form><br><br><br>
-    
 	<% 
 	    Project project = (Project)request.getAttribute("obj"); 
 	    if (null != project) {
@@ -38,9 +33,9 @@
 	</table>
 	<br><br><br>
 	<a href = "project?action=delete&id=<%= project.getId() %>"><button>Delete</button></a>
-	<a href = "updateProject.jsp?id=<%= project.getId() %>"><button>Update</button></a>
+	<a href = "project?action=edit&id=<%= project.getId() %>"><button>Edit</button></a>
     <% } %>
     <br><br><br>
-    <a href="projectHome.jsp"><button>Back</button></a>
+    <a href="project?action=showAll"><button>Back</button></a>
 </body>
 </html>

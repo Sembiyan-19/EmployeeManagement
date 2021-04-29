@@ -10,9 +10,9 @@
 </head>
 <body>
      <br>
-     <a href="employeeHome.jsp"><button>1. Employee Management</button></a>
+     <a href="employee?action=showAll"><button>1. Employee Management</button></a>
      <br>
      <br>
-     <a href="projectHome.jsp"><button>2. Project Management</button></a>
+     <a href="project?action=showAll"><button>2. Project Management</button></a>
 </body>
 </html>

@@ -1,231 +1,161 @@
-//                                                                             ;
 package com.ideas2it.employeeManagement.controller;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.ideas2it.employeeManagement.service.EmployeeService;
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import com.ideas2it.employeeManagement.service.impl.EmployeeServiceImpl;
+import com.ideas2it.projectManagement.model.Project;
+import com.ideas2it.employeeManagement.model.Employee;
+import com.ideas2it.employeeManagement.service.EmployeeService;
 
 /**
- * Class that acts as a controller
- *
- * @version 2.1 18 March 2021
- * @author Sembiyan
+ * Servlet implementation class projectController
  */
-public class EmployeeController {
+public class EmployeeController extends HttpServlet {
+	
+	private EmployeeService employeeService = new EmployeeServiceImpl();
+	private static final long serialVersionUID = 1L;
+       
+	/**
+	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		doGet(request, response);
+	}
 
-    private EmployeeService employeeService = new EmployeeServiceImpl();
-
-    /**
-     * Adds the address details such as door number, street, city, pincode,
-     * state, country and address list
-     * @param id          id of the employee
-     * @param name         name of the employee
-     * @param salary          salary of the employee
-     * @param mobileNumber          mobile number of the employee
-     * @param dateOfBirth          date of birth of the employee
-     * @param addresses         list containing addresses
-     * @return         true is details are successfully added else returns false
-     */
-    public boolean addEmployee(int id, String name, float salary,
-            String mobileNumber, Date dateOfBirth, List<List<String>> addresses) {
-        return employeeService.addEmployee(id, name, salary,
-                mobileNumber, dateOfBirth, addresses);
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		 String action = request.getParameter("action");
+		 switch (action) {
+		     case "showAll":
+	    	     viewAllEmployees(request, response);
+	    	     break;
+		     case "new":
+		    	 createNewEmployee(request, response);
+		    	 break;
+		     case "insert":
+			     try {
+				     insertEmployee(request, response);
+			     } catch (IOException | ParseException e) {
+				     e.printStackTrace();
+			     }
+		    	 break;
+		     case "view":
+		    	 viewEmployee(request, response);
+		    	 break;
+		     case "update":
+			try {
+				updateEmployee(request, response);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		    	 break;
+		     case "delete":
+		    	 deleteEmployee(request, response);
+		    	 break;
+		     case "edit":
+		    	 showEditForm(request, response);
+		    	 break;
+		    default:
+		    	viewAllEmployees(request, response);
+		    	break;
+		 }
+	}
+	
+	private void createNewEmployee(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+    	RequestDispatcher requestDispatcher = request.getRequestDispatcher("editEmployee.jsp");
+    	requestDispatcher.forward(request, response);
+	}
+	
+	private void showEditForm(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+    	int id = Integer.parseInt(request.getParameter("id"));
+    	Employee employee = employeeService.retrieveEmployee(id);
+    	request.setAttribute("obj", employee);
+    	RequestDispatcher requestDispatcher = request.getRequestDispatcher("editEmployee.jsp");
+    	requestDispatcher.forward(request, response);
+	}
+	
+    public void insertEmployee(HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException {
+    	int id = Integer.parseInt(request.getParameter("id"));
+    	String name = request.getParameter("name");
+    	float salary =Float.parseFloat(request.getParameter("salary"));
+    	String mobileNumber = request.getParameter("mobileNumber");
+    	System.out.println(request.getParameter("dateOfBirth")+"-----------------------");
+    	Date dateOfBirth = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("dateOfBirth"));
+    	List<List<String>> addresses = new ArrayList<List<String>>();
+    	List<String> address = new ArrayList<String>();
+    	address.add(request.getParameter("doorNumber"));
+    	address.add(request.getParameter("street"));
+    	address.add(request.getParameter("city"));
+    	address.add(request.getParameter("pincode"));
+    	address.add(request.getParameter("state"));
+    	address.add(request.getParameter("country"));
+    	address.add("permanent");
+    	addresses.add(address);
+    	List<String> optionalAddress = new ArrayList<String>();
+    	optionalAddress.add(request.getParameter("doorNumberO"));
+    	optionalAddress.add(request.getParameter("streetO"));
+    	optionalAddress.add(request.getParameter("cityO"));
+    	optionalAddress.add(request.getParameter("pincodeO"));
+    	optionalAddress.add(request.getParameter("stateO"));
+    	optionalAddress.add(request.getParameter("countryO"));
+    	optionalAddress.add("secondary");
+    	addresses.add(optionalAddress);
+     	employeeService.addEmployee(id, name, salary, mobileNumber, dateOfBirth, addresses);
+     	response.sendRedirect("employee?action=showAll");
     }
-
-    /**
-     * Retrieves the employee's details in string format
-     * @param id          employee id whose details should be retrieved
-     * @return            returns employee's details in string format
-     */
-    public String retrieveEmployee(int id) {
-        return employeeService.retrieveEmployeeDetails(id);
+    
+    public void viewEmployee(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    	int id = Integer.parseInt(request.getParameter("id"));
+    	Employee employee = employeeService.retrieveEmployee(id);
+    	request.setAttribute("obj", employee);
+    	RequestDispatcher requestDispatcher = request.getRequestDispatcher("viewEmployee.jsp");
+    	requestDispatcher.forward(request, response);
     }
-
-     /**
-     * Removes a employee's employees
-     * @param id          ID of employee whose details should be deleted
-     * @return
-     *     true if employee's details are successfully deleted
-     * else returns false
-     */
-    public boolean deleteEmployee(int id) {
-        return employeeService.deleteEmployee(id);
+    
+    
+    public void deleteEmployee(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    	int id = Integer.parseInt(request.getParameter("id"));
+    	employeeService.deleteEmployee(id);
+    	response.sendRedirect("employee?action=showAll");
     }
-
-    /**
-     * Updates the employee details such as  name, salary, mobile number,
-     * date of birth
-     * @param id           Id of the employee whose details should be updated
-     * @param name          name of the employee
-     * @param salary          salary of the employee
-     * @param mobileNumber          mobile number of the employee
-     * @param dateOfBirth          date of birth of the employee
-     * @return         
-     *     true if details are successfully updated else returns false
-     */
-    public boolean updateEmployee(int id, String name, float salary,
-                String mobileNumber, Date dateOfBirth) {
-        return employeeService.updateEmployee(id, name, salary,
-                mobileNumber, dateOfBirth);
+    
+    public void updateEmployee(HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException {
+    	int id = Integer.parseInt(request.getParameter("id"));
+    	String name = request.getParameter("name");
+    	float salary =Float.parseFloat(request.getParameter("salary"));
+    	String mobileNumber = request.getParameter("mobileNumber");
+    	Date dateOfBirth = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("dateOfBirth"));
+    	employeeService.updateEmployee(id, name, salary, mobileNumber, dateOfBirth);
+    	response.sendRedirect("employee?action=showAll");
     }
-
-    /**
-     * Adds new address to the employee
-     * @param id       ID of the employee to whom the address should be added
-     * @param addressDetails        list containg an address' details
-     * @return
-     *     true if a new address is successfully added else returns false
-     */
-    public boolean addNewAddress(int id, List<String> addressDetails) {
-        return employeeService.addNewAddress(id, addressDetails);
+    
+    public void viewAllEmployees(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    	List<Employee> employees = employeeService.getAll();
+    	request.setAttribute("obj", employees);
+    	RequestDispatcher requestDispatcher = request.getRequestDispatcher("employeeHome.jsp");
+    	requestDispatcher.forward(request, response);
     }
-
-    /**
-     * Deletes a particular address of a employee
-     * @param id         ID of the employee whose address should be deleted
-     * @param selectedAddressOption 
-     *         Option that points the address which has to be deleted
-     * @return
-     *     true if a address is successfully deleted else returns false
-     */
-    public boolean deleteExistingAddress(int id, int selectedAddressOption) {
-        return employeeService.deleteExistingAddress(id,
-                selectedAddressOption);
-    }
-
-    /**
-     * Updates the mobile number of the employee
-     * @param id
-     *         ID of the employee to whom the details has to be updated
-     * @param selectedAddressOption
-     *         Option that points the address to which the details
-     * has to be updated
-     * @param doorNumber          door number of the employee
-     * @param street         street of the employee
-     * @param city          city of the employee
-     * @param pincode          pincode of the employee
-     * @param state          state of the employee
-     * @param country          country of the employee
-     * @param addressType        type of address
-     */
-    public boolean updateExistingAddress(int id, int selectedAddressOption, 
-            String doorNumber, String street, String city, String pincode,
-            String state, String country, String addressType) {
-        return employeeService.updateExistingAddress(id, 
-                selectedAddressOption, doorNumber, street,
-                city, pincode, state, country, addressType);
-    }
-
-    /**
-     * Fetches the list of employees, converts them to string format,
-     * adds them to a list and returns the list
-     * @return         complete list of employees
-     */
-    public List<String> getAllEmployees() {
-        return employeeService.getAllEmployees();
-    }
-
-    /**
-     * Assigns projects for a employee
-     * @param projectIds
-     *     Ids of projects which has to be assigned for a employee
-     * @param employeeId
-     *     Id of the employee to whom the projects should be assigned
-     * @return         
-     *     true if projects are successfully assigned for a employee,
-     * else returns false
-     */
-    public boolean assignProjects(List<Integer> projectIds, int employeeId) {
-        return employeeService.assignProjects(projectIds, employeeId);
-    }
-
-    /**
-     * Unassigns projects for a employee
-     * @param projectIds
-     *     Ids of projects which has to be unassigned
-     * @param employeeId
-     *     Id of the employee to whom the projects should be unassigned
-     * @return         
-     *     true if projects are successfully unassigned for a employee,
-     * else returns false
-     */
-    public boolean unassignProjects(List<Integer> projectIds, int employeeId) {
-        return employeeService.unassignProjects(projectIds, employeeId);
-    }
-
-    /**
-     * Retrieves all the addresses of an employee
-     * @param id         ID of the employee whose addresses should be retrieved
-     * @return           list of address
-     */
-    public List<String> getAllAddress(int id) {
-        return employeeService.getAllAddress(id);
-    }
-
-    /**
-     * Checks the presence of employee
-     * @param id          ID of employee which has to be checked
-     * @return
-     *     true if Id is present else returns false
-     */
-    public boolean checkEmployeeIdPresence(int id) {
-        return employeeService.checkEmployeeIdPresence(id);
-    }
-
-    /**
-     * Checks the presence of employee icluding the ids which are 
-     * deleted
-     * @param id          ID of employee which has to be checked
-     * @return
-     *     true if Id is present else returns false
-     */
-    public boolean checkEmployeeIdPresenceIncludingDeleted(int id) {
-        return employeeService.checkEmployeeIdPresenceIncludingDeleted(id);
-    }
-
-    /**
-     * Checks the presence of projects in a employee
-     * @param projectIds          list of project Ids which has to be checked
-     * @return
-     *     project Ids which are not present
-     */
-    public List<Integer> checkProjectIdPresence(List<Integer> projectIds) {
-        return employeeService.checkProjectIdPresence(projectIds);
-    }
-
-    /**
-     * Checks the presence of projects in a employee
-     * @param projectIds          list of project Ids which has to be checked
-     * @param employeeId           
-     *     Id of the employee to which from which the project Ids
-     * has to checked
-     * @return
-     *    Two lists; one containing Ids which are present and another
-     * containing Ids which are not present
-     */
-    public List<List<Integer>> checkProjectInEmployee(List<Integer> projectIds,
-            int employeeId) {
-        return employeeService.checkProjectInEmployee(projectIds, employeeId);
-    }
-
-    /**
-     * Checks whether the mobile number is valid
-     * @param mobileNumber        mobile number that has to be validated
-     * @return         true if the mobile number is valid, else returns false
-     */
-    public boolean validateMobileNumber(String mobileNumber) {
-        return employeeService.validateMobileNumber(mobileNumber);
-    }
-
-    /**
-     * Checks the date format and returns the date if it is valid
-     * @param dateOfBirth        date of birth that has to be validated
-     * @return                  validated date of birth
-     */
-    public Date getDateOfBirth(String dateOfBirth) {
-        return employeeService.getDateOfBirth(dateOfBirth);
-    }
+    
+    
 }
-

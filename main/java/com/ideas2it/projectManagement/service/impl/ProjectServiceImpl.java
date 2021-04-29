@@ -141,6 +141,14 @@ public class ProjectServiceImpl implements ProjectService {
      * {@inheritDoc}
      */
     @Override
+    public List<Project> getAll() {
+        return projectDao.getAllProjects();
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public boolean checkProjectIdPresence(int projectId) {
         boolean isPresent = false;
         Project project = projectDao.retrieveProject(projectId);

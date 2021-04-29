@@ -171,6 +171,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employees;
     }
 
+	@Override
+	public List<Employee> getAll() {
+		// TODO Auto-generated method stub
+		return employeeDao.getAllEmployees();
+	}
+    
     /**
      * {@inheritDoc}
      */
@@ -219,7 +225,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         return listOfAddress;
     }
-
+    
     /**
      * {@inheritDoc}
      */

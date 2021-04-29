@@ -193,4 +193,6 @@ public interface EmployeeService {
      *     the date if it is valid, else return null if the date is not valid
      */
     public Date getDateOfBirth(String dateOfBirth);
+
+	public List<Employee> getAll();
 }

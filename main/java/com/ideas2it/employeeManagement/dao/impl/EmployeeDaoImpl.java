@@ -5,9 +5,11 @@ import java.util.List;
 //import org.hibernate.Criteria;
 //import org.hibernate.criterion.Restrictions;
 import org.hibernate.query.Query;
+import org.hibernate.Criteria;
 //import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 
 import com.ideas2it.employeeManagement.dao.EmployeeDao;
 import com.ideas2it.employeeManagement.model.Address;
@@ -92,7 +94,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
      */
     @Override
     public List<Employee> getAllEmployees() {
-        /*List<Employee> employees = null;
+        List<Employee> employees = null;
         Session session = null;
         try {
             SessionFactory sessionFactory = singleton.getSessionFactory();
@@ -106,8 +108,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
         } finally {
             session.close();
         }
-        return employees;*/
-    	return null;
+        return employees;
     }
 
         public Employee re(int id) {

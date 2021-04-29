@@ -93,6 +93,8 @@ public interface ProjectService {
      */
     public List<String> getAllProjects();
 
+    public List<Project> getAll();
+    
     /**
      * Checks the presence of project id
      * @param projectId          ID of project which has to be checked
@@ -120,7 +122,8 @@ public interface ProjectService {
     /**
      * Checks the presence of projects in a employee
      * @param projectId 
-     *     Id of the project from which the employees Ids
+     *     Id of the project@Override
+	 from which the employees Ids
      * has to checked         
      * @param employeeIds         list of employee Ids which has to be checked
      * @return
