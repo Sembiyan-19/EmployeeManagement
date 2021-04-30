@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ideas2it.employeeManagement.model.Employee;
 import com.ideas2it.projectManagement.model.Project;
 import com.ideas2it.projectManagement.service.impl.ProjectServiceImpl;
 import com.ideas2it.projectManagement.service.ProjectService;
@@ -61,13 +62,48 @@ public class ProjectController extends HttpServlet {
             case "edit":
                 showEditForm(request, response);
                 break;
+            case "assign":
+                assignAEmployee(request, response);
+                break;
+            case "unassign":
+                unnassignAEmployee(request, response);
+                break;
+            case "showAvailableEmployees":
+            	showAvailableEmployees(request, response);
+                break;
             default:
                 showAllProjects(request, response);
                 break;
          }
     }
     
-    private void createNewProject(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    private void assignAEmployee(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    	int projectId = Integer.parseInt(request.getParameter("projectId"));
+    	int employeeId = Integer.parseInt(request.getParameter("employeeId"));
+		projectService.assignAEmployee(projectId, employeeId);
+		response.sendRedirect("project?action=view&id=" + projectId);
+	}
+
+	private void showAvailableEmployees(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	int id = Integer.parseInt(request.getParameter("id"));
+		request.setAttribute("obj", projectService.retrieveProject(id));
+		request.setAttribute("availableEmployees", projectService.getAvailableEmployees(id));
+		RequestDispatcher requestDispatcher = request.getRequestDispatcher("viewProject.jsp");
+        requestDispatcher.forward(request, response);
+	}
+
+	private void unnassignAEmployee(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    	int projectId = Integer.parseInt(request.getParameter("projectId"));
+    	int employeeId = Integer.parseInt(request.getParameter("employeeId"));
+		projectService.unassignAEmployee(projectId, employeeId);
+		//Project project = projectService.retrieveProject(projectId);
+		//request.setAttribute("obj", project);
+    	//RequestDispatcher requestDispatcher = request.getRequestDispatcher("viewProject.jsp");
+        //requestDispatcher.forward(request, response);
+		response.sendRedirect("project?action=view&id=" + projectId);
+	}
+
+	private void createNewProject(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RequestDispatcher requestDispatcher = request.getRequestDispatcher("editProject.jsp");
         requestDispatcher.forward(request, response);
     }
@@ -108,11 +144,8 @@ public class ProjectController extends HttpServlet {
         String name = request.getParameter("name");
         String manager = request.getParameter("manager");
         String department = request.getParameter("department");
-        System.out.println(name);
-        System.out.println(manager);
-        System.out.println(department);
         projectService.updateProject(id, name, manager, department);
-        response.sendRedirect("project?action=showAll");
+        response.sendRedirect("project?action=view&id="+id);
     }
     
     public void showAllProjects(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

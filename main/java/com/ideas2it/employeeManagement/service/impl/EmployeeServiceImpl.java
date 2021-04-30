@@ -322,6 +322,50 @@ public class EmployeeServiceImpl implements EmployeeService {
         return date;
     }
     
+    public void assignAProject(int projectId, int employeeId) {
+    	ProjectService projectService = new ProjectServiceImpl();
+    	Employee employee = employeeDao.retrieveEmployee(employeeId);
+    	List<Project> projects = employee.getProjects();
+    	projects.add(projectService.retrieveProject(projectId));
+    	employee.setProjects(projects);
+    	employeeDao.updateEmployee(employee);
+    }
+
+	public List<Project> getAvailableProjects(int employeeId) {
+		boolean isPresent;
+    	List<Project> availableProjects = new ArrayList<Project>();
+    	ProjectService projectService = new ProjectServiceImpl();
+    	Employee employee = employeeDao.retrieveEmployee(employeeId);
+    	for (Project project : projectService.getAll()) {
+    		isPresent = false;
+    		for (Project projectsInEmployee : employee.getProjects()) {
+    			if (project.getId() == projectsInEmployee.getId()) {
+    				isPresent = true;
+    			}
+    		}
+    		if (false == isPresent) {
+    			availableProjects.add(project);
+    		}
+    	}
+    	return availableProjects;
+	}
+
+	public void unassignAProject(int projectId, int employeeId) {
+		Employee employee = employeeDao.retrieveEmployee(employeeId);
+    	List<Project> projects = employee.getProjects();
+    	int indexOfProject = 0;
+        int count=0;
+    	for (Project project : projects) {
+    		count++;
+    		if (projectId == project.getId()) {
+    			indexOfProject = count - 1;
+    		}
+    	}
+    	projects.remove(indexOfProject);
+    	employee.setProjects(projects);
+        employeeDao.updateEmployee(employee);
+	}
+    
     private String getSpacing() {
         return ("\n\n--------------------------------------------" 
                 + "------------------------------------------\n\n");

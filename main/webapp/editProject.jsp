@@ -19,6 +19,12 @@
 		Project manager: <input type = "text" name = "manager" value = "${obj.manager}" required><br><br>
 		Department: <input type = "text" name = "department" value = "${obj.department}" required><br><br>
 	<input type = "submit"> 
-	</form>
+	</form><br><br><br>
+	<c:if test="${obj != null}">
+		<a href="project?action=view&id=${obj.id}"><button>Back</button></a>
+    </c:if>
+    <c:if test="${obj == null}">
+        <a href="project?action=showAll"><button>Back</button></a>
+    </c:if>
 </body>
 </html>

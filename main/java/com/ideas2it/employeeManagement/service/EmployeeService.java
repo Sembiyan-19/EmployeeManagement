@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.ideas2it.employeeManagement.model.Employee;
+import com.ideas2it.projectManagement.model.Project;
 
 /**
  * Interface to provide services for employee management
@@ -195,4 +196,10 @@ public interface EmployeeService {
     public Date getDateOfBirth(String dateOfBirth);
 
 	public List<Employee> getAll();
+
+	public void assignAProject(int projectId, int employeeId);
+
+	public List<Project> getAvailableProjects(int id);
+
+	public void unassignAProject(int projectId, int employeeId);
 }

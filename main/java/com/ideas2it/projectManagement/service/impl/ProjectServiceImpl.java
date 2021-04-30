@@ -123,7 +123,36 @@ public class ProjectServiceImpl implements ProjectService {
 		project.setEmployees(employees);
         return projectDao.updateProject(project);
     }
-
+    
+    public void assignAEmployee(int projectId, int employeeId) {
+    	EmployeeService employeeService = new EmployeeServiceImpl();
+        Project project = projectDao.retrieveProject(projectId);
+        List<Employee> employees = project.getEmployees();
+        employees.add(employeeService.retrieveEmployee(employeeId));
+        project.setEmployees(employees);
+        projectDao.updateProject(project);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void unassignAEmployee(int projectId, int employeeId) {
+    	Project project = projectDao.retrieveProject(projectId);
+    	List<Employee> employees = project.getEmployees();
+    	int indexOfEmployee = 0;
+        int count=0;
+    	for (Employee employee : employees) {
+    		count++;
+    		if (employeeId == employee.getId()) {
+    			indexOfEmployee = count - 1;
+    		}
+    	}
+    	employees.remove(indexOfEmployee);
+    	project.setEmployees(employees);
+        projectDao.updateProject(project);
+    }
+    
     /**
      * {@inheritDoc}
      */
@@ -216,6 +245,25 @@ public class ProjectServiceImpl implements ProjectService {
         return listOfIds;
     }
 
+    public List<Employee> getAvailableEmployees(int projectId) {
+    	boolean isPresent;
+    	List<Employee> availableEmployees = new ArrayList<Employee>();
+    	EmployeeService employeeService = new EmployeeServiceImpl();
+    	Project project = projectDao.retrieveProject(projectId);
+    	for (Employee employee : employeeService.getAll()) {
+    		isPresent = false;
+    		for (Employee employeeInProject : project.getEmployees()) {
+    			if (employee.getId() == employeeInProject.getId()) {
+    				isPresent = true;
+    			}
+    		}
+    		if (false == isPresent) {
+    			availableEmployees.add(employee);
+    		}
+    	}
+    	return availableEmployees;
+    }
+    
     private String getSpacing() {
         return ("\n\n--------------------------------------------" 
                 + "------------------------------------------\n\n");

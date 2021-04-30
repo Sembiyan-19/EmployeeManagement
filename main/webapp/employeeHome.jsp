@@ -4,7 +4,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 <body>
-				<a href="employee?action=new">Add New employee</a>
+<a href="index.jsp"><button>Home</button></a>
+    <br><br><br>
+				<a href="employee?action=new"><button>Add New employee</button></a>
 			    <br>
 	<br>
 	<div align = "right">
@@ -23,7 +25,7 @@
 						<th>Salary</th>
 						<th>Mobile Number</th>
 						<th>Date Of Birth</th>
-						<th colspan = "3">Actions</th>
+						<th colspan = "2">Actions</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -37,14 +39,14 @@
 							<td><c:out value="${employee.mobileNumber}" /></td>
 							<td><c:out value="${employee.dateOfBirth}" /></td>
 							<td><a href = "employee?action=view&id=<c:out value='${employee.id}' />">View</a></td>
-					<td><a href = "employee?action=edit&id=<c:out value='${employee.id}' />">Edit</a></td>
 					<td><a href = "employee?action=delete&id=<c:out value='${employee.id}' />">Delete</a></td>
 						</tr>
 					</c:forEach>
 					<!-- } -->
 				</tbody>
 
-			</table>
+			</table><br><br><br>
+	<a href="index.jsp"><button>Back</button></a>
 		
 </body>
 </html>

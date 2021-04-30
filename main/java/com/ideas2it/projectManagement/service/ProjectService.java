@@ -4,6 +4,7 @@ package com.ideas2it.projectManagement.service;
 import java.util.List;
 import java.util.Map;
 
+import com.ideas2it.employeeManagement.model.Employee;
 import com.ideas2it.projectManagement.model.Project;
 
 /**
@@ -93,6 +94,7 @@ public interface ProjectService {
      */
     public List<String> getAllProjects();
 
+    public void unassignAEmployee(int projectId, int employeeId);
     public List<Project> getAll();
     
     /**
@@ -112,7 +114,8 @@ public interface ProjectService {
     public boolean checkProjectIdPresenceWithDeleted(int projectId);
 
     /**
-     * Checks the presence of employees in a project
+     * Check@Override
+	s the presence of employees in a project
      * @param employeeIds          ID of employees which has to be checked
      * @return
      *     Ids which are not present in the project
@@ -132,4 +135,8 @@ public interface ProjectService {
      */
     public List<List<Integer>> checkEmployeesInProject(int projectId,
             List<Integer> employeeIds);
+
+	public List<Employee> getAvailableEmployees(int projectId);
+
+	public void assignAEmployee(int projectId, int employeeId);
 }

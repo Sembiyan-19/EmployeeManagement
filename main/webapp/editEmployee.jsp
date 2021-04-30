@@ -40,6 +40,11 @@
 	    </form>
 		</c:if>
 		<br><br><br>
-		<a href = "employee?action=showAll"><button>Back</button></a>
+		<c:if test="${obj != null}">
+		<a href="employee?action=view&id=${obj.id}"><button>Back</button></a>
+    </c:if>
+    <c:if test="${obj == null}">
+        <a href="employee?action=showAll"><button>Back</button></a>
+    </c:if>
 </body>
 </html>

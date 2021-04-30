@@ -5,9 +5,14 @@
 <html>
 <head>
     <title>Project Home</title>
+   <style>
+   
+   </style>
 </head>
 <body>
-	<a href="project?action=new">Add New Project</a>
+    <a href="index.jsp"><button>Home</button></a>
+    <br><br><br>
+	<a href="project?action=new"><button>Add New Project</button></a>
 	<br>
 	<br>
 	<div align = "right">
@@ -18,29 +23,29 @@
 	</div>
 	<br>
 	<br>
-	<table border = "1px" width = 50% align = "center">
+	<table border = "1px" height = 40% width = 60% align = "center">
 		<thead>
 			<tr>
 				<th>Id</th>
 				<th>Name</th>
 				<th>Department</th>
-				<th colspan = "3">Actions</th>
+				<th colspan = "2">Actions</th>
 			</tr>
 		</thead>
 		<tbody>
-		<!--   for (Todo todo: todos) {  -->
+		
 			<c:forEach var = "project" items = "${obj}">
 				<tr>
 					<td><c:out value = "${project.id}" /></td>
 					<td><c:out value = "${project.name}" /></td>
 					<td><c:out value = "${project.department}" /></td>
 					<td><a href = "project?action=view&id=<c:out value='${project.id}' />">View</a></td>
-					<td><a href = "project?action=edit&id=<c:out value='${project.id}' />">Edit</a></td>
 					<td><a href = "project?action=delete&id=<c:out value='${project.id}' />">Delete</a></td>
 				</tr>
 			</c:forEach>
-		<!-- } -->
+
 		</tbody>
-	</table>
+	</table><br><br><br>
+	<a href="index.jsp"><button>Back</button></a>
 </body>
 </html>
