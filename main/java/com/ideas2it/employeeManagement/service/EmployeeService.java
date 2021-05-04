@@ -30,13 +30,6 @@ public interface EmployeeService {
             String mobileNumber, Date dateOfBirth, List<List<String>> addresses);
 
     /**
-     * Retrieves the employee's details in string format
-     * @param id          employee id whose details should be retrieved
-     * @return            returns employee's details in string format
-     */
-    public String retrieveEmployeeDetails(int id);
-
-    /**
      * Retrieves the employee object
      * @param id          employee id whose details should be retrieved
      * @return            returns employee object
@@ -52,6 +45,14 @@ public interface EmployeeService {
      */
     public boolean deleteEmployee(int id);
 
+    /**
+     * Restores a deleted employee
+     * @param id          Id of the employee who has to be restored
+     * @return        
+     *     true if employee is successfully restored else returns false
+     */
+    public boolean restoreEmployee(int id);
+    
     /**
      * Updates the employee details such as  name, salary, mobile number,
      * date of birth
@@ -105,42 +106,50 @@ public interface EmployeeService {
             String state, String country, String addressType);
 
     /**
-     * Fetches the list of employees, converts them to string format,
-     * adds them to a list and returns the list
-     * @return         complete list of employees
-     */
-    public List<String> getAllEmployees();
-
-    /**
-     * Assigns projects for a employee
-     * @param projectIds
-     *     Ids of projects which has to be assigned for a employee
-     * @param employeeId
-     *     Id of the employee to whom the projects should be assigned
-     * @return         
-     *     true if projects are successfully assigned for a employee,
-     * else returns false
-     */
-    public boolean assignProjects(List<Integer> projectIds, int employeeId);
-
-    /**
-     * Unassigns projects for a employee
-     * @param projectIds
-     *     Ids of projects which has to be unassigned
-     * @param employeeId
-     *     Id of the employee to whom the projects should be unassigned
-     * @return         
-     *     true if projects are successfully unassigned for a employee,
-     * else returns false
-     */
-    public boolean unassignProjects(List<Integer> projectIds, int employeeId);
-
-    /**
      * Retrieves all the addresses of an employee
      * @param id         ID of the employee whose addresses should be retrieved
      * @return           list of address
      */
-    public List<String> getAllAddress(int id);
+    public List<Employee> getAllEmployees();
+
+    /**
+     * Fetches the list of employees which are deleted
+     * @return         complete list of employees which are deleted
+     */
+    public List<Employee> getDeletedEmployees();
+    
+    /**
+     * Assigns project for a employee
+     * @param projectId
+     *     Id of project which has to be assigned for a employee
+     * @param employeeId
+     *     Id of the employee to whom the project should be assigned
+     * @return         
+     *     true if project is successfully assigned for a employee,
+     * else returns false
+     */
+    public void assignAProject(int projectId, int employeeId);
+
+    /**
+     * Unassigns project for a employee
+     * @param projectId
+     *     Id of project which has to be unassigned
+     * @param employeeId
+     *     Id of the employee to whom the project should be unassigned
+     * @return         
+     *     true if project is successfully unassigned for a employee,
+     * else returns false
+     */
+    public void unassignAProject(int projectId, int employeeId);
+
+    /**
+     * Gets the projects which can be assigned for a employee
+     * @param employeeId
+     *     Id of employee
+     * @return         
+     *     list of projects which can be assigned for the employee
+     */
+    public List<Project> getAvailableProjects(int employeeId);
 
     /**
      * Checks the presence of employee
@@ -160,27 +169,6 @@ public interface EmployeeService {
     public boolean checkEmployeeIdPresenceIncludingDeleted(int id);
 
     /**
-     * Checks the presence of projects in a employee
-     * @param projectIds          list of project Ids which has to be checked
-     * @return
-     *     project Ids which are not present
-     */
-    public List<Integer> checkProjectIdPresence(List<Integer> projectIds);
-
-    /**
-     * Checks the presence of projects in a employee
-     * @param projectIds          list of project Ids which has to be checked
-     * @param employeeId           
-     *     Id of the employee to which from which the project Ids
-     * has to checked
-     * @return
-     *    Two lists; one containing Ids which are present and another
-     * containing Ids which are not present
-     */
-    public List<List<Integer>> checkProjectInEmployee(List<Integer> projectIds,
-            int employeeId);
-
-    /**
      * Checks whether the mobile number is valid.
      * @param mobileNumber           mobile number that has to be validated
      * @return          true if the mobile number is valid, else returns false
@@ -194,12 +182,4 @@ public interface EmployeeService {
      *     the date if it is valid, else return null if the date is not valid
      */
     public Date getDateOfBirth(String dateOfBirth);
-
-	public List<Employee> getAll();
-
-	public void assignAProject(int projectId, int employeeId);
-
-	public List<Project> getAvailableProjects(int id);
-
-	public void unassignAProject(int projectId, int employeeId);
 }

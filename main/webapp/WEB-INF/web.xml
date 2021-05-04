@@ -1,20 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
-  
-<servlet>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns="http://xmlns.jcp.org/xml/ns/javaee" 
+    xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+	http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+	id="WebApp_ID" version="3.1">
+  <servlet>
     <servlet-name>projectC</servlet-name>
-    <servlet-class>com.ideas2it.projectManagement.controller.ProjectController</servlet-class>
-</servlet>
-<servlet-mapping>
+    <servlet-class>
+	  com.ideas2it.projectManagement.controller.ProjectController
+	</servlet-class>
+  </servlet>
+  <servlet-mapping>
     <servlet-name>projectC</servlet-name>
     <url-pattern>/project</url-pattern>
-</servlet-mapping>
-<servlet>
+  </servlet-mapping>
+  <servlet>
     <servlet-name>employeeC</servlet-name>
-    <servlet-class>com.ideas2it.employeeManagement.controller.EmployeeController</servlet-class>
-</servlet>
-<servlet-mapping>
+    <servlet-class>
+      com.ideas2it.employeeManagement.controller.EmployeeController
+	</servlet-class>
+  </servlet>
+  <servlet-mapping>
     <servlet-name>employeeC</servlet-name>
     <url-pattern>/employee</url-pattern>
-</servlet-mapping>
+  </servlet-mapping>
 </web-app>

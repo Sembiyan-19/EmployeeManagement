@@ -14,7 +14,7 @@ import org.hibernate.criterion.Restrictions;
 import com.ideas2it.employeeManagement.dao.EmployeeDao;
 import com.ideas2it.employeeManagement.model.Address;
 import com.ideas2it.employeeManagement.model.Employee;
-import com.ideas2it.sessionFactory.SessionFactoryImpl;
+import com.ideas2it.sessionFactory.HibernateSessionFactory;
 
 /**
  * Class which implements Dao interface
@@ -24,7 +24,7 @@ import com.ideas2it.sessionFactory.SessionFactoryImpl;
  */
 public class EmployeeDaoImpl implements EmployeeDao {
 
-    private SessionFactoryImpl singleton = SessionFactoryImpl.getInstance();
+    private HibernateSessionFactory singleton = HibernateSessionFactory.getInstance();
 
     /**
      * {@inheritDoc}
@@ -59,6 +59,8 @@ public class EmployeeDaoImpl implements EmployeeDao {
             SessionFactory sessionFactory = singleton.getSessionFactory();
             session = sessionFactory.openSession();
             employee = (Employee) session.get(Employee.class, id);
+            employee.getAddresses().size();
+            employee.getProjects().size();
         } catch (Exception e) {
             System.out.println(e);
         } finally {
@@ -93,7 +95,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
      * {@inheritDoc}
      */
     @Override
-    public List<Employee> getAllEmployees() {
+    public List<Employee> getAllEmployees(boolean isDeleted) {
         List<Employee> employees = null;
         Session session = null;
         try {
@@ -101,7 +103,7 @@ public class EmployeeDaoImpl implements EmployeeDao {
             session = sessionFactory.openSession();
             session.beginTransaction();
             Criteria criteria = session.createCriteria(Employee.class);
-            criteria.add(Restrictions.eq("isDeleted", false));
+            criteria.add(Restrictions.eq("isDeleted", isDeleted));
             employees = criteria.list();
         } catch (Exception e) {
             System.out.println(e);
@@ -109,44 +111,5 @@ public class EmployeeDaoImpl implements EmployeeDao {
             session.close();
         }
         return employees;
-    }
-
-        public Employee re(int id) {
-        List<Employee> employees = null;
-        List<Address> addr = null;
-        List<String> s = null;
-        Employee employee = null;
-        Session session = null;
-        try {
-            SessionFactory sessionFactory = singleton.getSessionFactory();
-            session = sessionFactory.openSession();
-            //String hql = "select e from Employee as e left join e.addresses as a where e.id=7 and a.city = 'madurai'";
-            String hql = "select e, a from Employee as e left join e.addresses as a where e.id=7 and a.city = 'madurai'";
-            Query query = session.createQuery(hql);
-            List li = query.list();
-            System.out.println(li);
-            for (Object o : li) {
-                employees.add((Employee)o);
-            }
-            System.out.println("\n\n\n"+employees.get(0).toString()+"\n\n\n");
-            //Employee i = (Employee)query.list().get(0);
-            //System.out.println("\n\n\n"+i+"\n\n\n");
-            //int s = query.list().size();
-            //for (int i=0; i<s; i++) {
-               //System.out.println("\n\n\n\n"+query.list().get(i).toString()+"\n\n\n\n");
-            //}
-            //addr = query.list();
-            //String d= "";
-            //for (Address e : addr) {
-            //for (String e : s) {
-            //for (Employee e : employees) {
-                //d = d + e.toString();
-            //}
-        } catch (Exception e) {
-            System.out.println(e);
-        } finally {
-            session.close();
-        }
-        return employee;
     }
 }

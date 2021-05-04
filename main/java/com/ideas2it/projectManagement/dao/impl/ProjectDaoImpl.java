@@ -4,15 +4,14 @@ package com.ideas2it.projectManagement.dao.impl;
 import java.util.List;
 
 import org.hibernate.Criteria;
-//import org.hibernate.Criteria;
-//import org.hibernate.criterion.Restrictions;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
+import com.ideas2it.employeeManagement.model.Employee;
 import com.ideas2it.projectManagement.dao.ProjectDao;
 import com.ideas2it.projectManagement.model.Project;
-import com.ideas2it.sessionFactory.SessionFactoryImpl;
+import com.ideas2it.sessionFactory.HibernateSessionFactory;
 
 /**
  * Class which implements Dao interface
@@ -22,7 +21,7 @@ import com.ideas2it.sessionFactory.SessionFactoryImpl;
  */
 public class ProjectDaoImpl implements ProjectDao {
 
-    private SessionFactoryImpl singleton = SessionFactoryImpl.getInstance();
+    private HibernateSessionFactory singleton = HibernateSessionFactory.getInstance();
 
     /**
      * {@inheritDoc}
@@ -53,10 +52,12 @@ public class ProjectDaoImpl implements ProjectDao {
     public Project retrieveProject(int projectId) {
         Project project = null;
         Session session = null;
+        List<Employee> employees = null;
         try {
             SessionFactory sessionFactory = singleton.getSessionFactory();
             session = sessionFactory.openSession();
             project = (Project) session.get(Project.class, projectId);
+            project.getEmployees().size();
         } catch (Exception e) {
             System.out.println(e);
         } finally {
@@ -91,7 +92,7 @@ public class ProjectDaoImpl implements ProjectDao {
      * {@inheritDoc}
      */
     @Override
-    public List<Project> getAllProjects() {
+    public List<Project> getAllProjects(boolean isDeleted) {
         List<Project> projects = null;
         Session session = null;
         try {
@@ -99,7 +100,7 @@ public class ProjectDaoImpl implements ProjectDao {
             session = sessionFactory.openSession();
             session.beginTransaction();
             Criteria criteria = session.createCriteria(Project.class);
-            criteria.add(Restrictions.eq("isDeleted", false));
+            criteria.add(Restrictions.eq("isDeleted", isDeleted));
             projects = criteria.list();
         } catch (Exception e) {
             System.out.println(e);
@@ -107,6 +108,5 @@ public class ProjectDaoImpl implements ProjectDao {
             session.close();
         }
         return projects;
-    	//return null;
     }
 }

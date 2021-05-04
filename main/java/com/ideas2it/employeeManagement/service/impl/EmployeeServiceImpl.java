@@ -42,7 +42,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         boolean isAdded = employeeDao.insertEmployee(new Employee(id, name, 
                 salary, mobileNumber, dateOfBirth, false, listOfAddress));
-        //addresses.clear();
         return isAdded;
     }
 
@@ -50,24 +49,16 @@ public class EmployeeServiceImpl implements EmployeeService {
      * {@inheritDoc}
      */
     @Override
-    public String retrieveEmployeeDetails(int id) {
-        String projectsAssociated = "\nProjects associated: ";
-        Employee employee = employeeDao.retrieveEmployee(id);
-        for (Project project : employee.getProjects()) {
-            projectsAssociated = projectsAssociated + project.getId() 
-                    + "  --->  " + project.getName() 
-                    + "\n                     ";
-        }
-        return (getSpacing() + employee.toString() + projectsAssociated
-                + getSpacing());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Employee retrieveEmployee(int id) {
-        return employeeDao.retrieveEmployee(id);
+    	Employee employee = employeeDao.retrieveEmployee(id);
+    	List<Address> addresses = new ArrayList<Address>();
+    	for (Address address : employee.getAddresses()) {
+    		if (false == address.getIsDeleted()) {
+    			addresses.add(address);
+    		}
+    	}
+    	employee.setAddresses(addresses);
+		return employee;
     }
 
     /**
@@ -78,6 +69,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = employeeDao.retrieveEmployee(id);
         employee.setIsDeleted(true);
 		employee.setProjects(null);
+        return employeeDao.updateEmployee(employee);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean restoreEmployee(int id) {
+        Employee employee = employeeDao.retrieveEmployee(id);
+        employee.setIsDeleted(false);
         return employeeDao.updateEmployee(employee);
     }
 
@@ -109,7 +110,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public boolean addNewAddress(int id, List<String> addressDetails) {
         Employee employee = employeeDao.retrieveEmployee(id);
-        List<Address> listOfAddress = employee.getAddresses(); //-----------------------------------
+        List<Address> listOfAddress = employee.getAddresses();
         listOfAddress.add(new Address(addressDetails.get(0),
                 addressDetails.get(1), addressDetails.get(2), 
                 addressDetails.get(3), addressDetails.get(4),
@@ -124,7 +125,14 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public boolean deleteExistingAddress(int id, int selectedAddressOption) {
         Employee employee = employeeDao.retrieveEmployee(id);
-		employee.getAddresses().get(selectedAddressOption).setIsDeleted(true);
+		int idToBeDeleted 
+		        = retrieveEmployee(id).getAddresses()
+		        .get(selectedAddressOption).getId();
+		for (Address address : employee.getAddresses()) {
+			if (idToBeDeleted == address.getId()) {
+				address.setIsDeleted(true);
+			}
+		}
         return employeeDao.updateEmployee(employee);
     }
 
@@ -136,26 +144,19 @@ public class EmployeeServiceImpl implements EmployeeService {
             String doorNumber, String street, String city, String pincode,
             String state, String country, String addressType) {
 		Employee employee = employeeDao.retrieveEmployee(id);
-		Address address 
-		        = employee.getAddresses().get(selectedAddressOption);
-        if (null != doorNumber) {
-            address.setDoorNumber(doorNumber);
-        }
-        if (null != street) {
-            address.setStreet(street);
-        }
-        if (null != city) {
-            address.setCity(city);
-        }
-        if (null != pincode) {
-            address.setPincode(pincode);
-        }
-        if (null != state) {
-            address.setState(state);
-        }
-        if (null != country) {
-            address.setCountry(country);
-        }
+		int idToBeUpdated
+				= retrieveEmployee(id).getAddresses()
+				.get(selectedAddressOption).getId();
+		for (Address address : employee.getAddresses()) {
+			if (idToBeUpdated == address.getId()) {
+				address.setDoorNumber(doorNumber);
+				address.setStreet(street);
+				address.setCity(city);
+            	address.setPincode(pincode);
+            	address.setState(state);
+            	address.setCountry(country);
+			}
+		}
         return employeeDao.updateEmployee(employee);
     }
 
@@ -163,68 +164,73 @@ public class EmployeeServiceImpl implements EmployeeService {
      * {@inheritDoc}
      */
     @Override
-    public List<String> getAllEmployees() {
-        List<String> employees = new ArrayList<String>();
-        for (Employee employee : employeeDao.getAllEmployees()) {
-            employees.add(employee.toString() + getSpacing());
-        }
-        return employees;
-    }
-
-	@Override
-	public List<Employee> getAll() {
-		// TODO Auto-generated method stub
-		return employeeDao.getAllEmployees();
-	}
-    
-    /**
-     * {@inheritDoc}
-     */
-    public boolean assignProjects(List<Integer> projectIds, int employeeId) {
-        Employee employee = employeeDao.retrieveEmployee(employeeId);
+    public void assignAProject(int projectId, int employeeId) {
         ProjectService projectService = new ProjectServiceImpl();
-		List<Project> projects = employee.getProjects();
-        for (Integer projectId : projectIds) {
-            projects.add(projectService.retrieveProject(projectId));
-        }
-		employee.setProjects(projects);
-        return employeeDao.updateEmployee(employee);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean unassignProjects(List<Integer> projectIds, int employeeId) {
         Employee employee = employeeDao.retrieveEmployee(employeeId);
         List<Project> projects = employee.getProjects();
-        for (Integer projectId : projectIds) {
-            int indexOfTheProject = 0;
-            int count = 0;
-            for (Project project : projects) {
-                count++;
-                if (project.getId() == projectId) {
-                    indexOfTheProject = count - 1;
-                }
-            }
-            projects.remove(indexOfTheProject);
-        }
-		employee.setProjects(projects);
-        return employeeDao.updateEmployee(employee);
+        projects.add(projectService.retrieveProject(projectId));
+        employee.setProjects(projects);
+        employeeDao.updateEmployee(employee);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<String> getAllAddress(int id) {
-        List<String> listOfAddress = new ArrayList<String>();
-        //List<Address> addresses 
-         //       = employeeDao.retrieveEmployee(id).getAddresses();
-        for (Address address : retrieveEmployee(id).getAddresses()) {
-            listOfAddress.add(address.toString());
+    public void unassignAProject(int projectId, int employeeId) {
+        Employee employee = employeeDao.retrieveEmployee(employeeId);
+        List<Project> projects = employee.getProjects();
+        int indexOfProject = 0;
+        int count=0;
+        for (Project project : projects) {
+            count++;
+            if (projectId == project.getId()) {
+                indexOfProject = count - 1;
+            }
         }
-        return listOfAddress;
+        projects.remove(indexOfProject);
+        employee.setProjects(projects);
+        employeeDao.updateEmployee(employee);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Project> getAvailableProjects(int employeeId) {
+        boolean isPresent;
+        List<Project> availableProjects = new ArrayList<Project>();
+        ProjectService projectService = new ProjectServiceImpl();
+        Employee employee = employeeDao.retrieveEmployee(employeeId);
+        for (Project project : projectService.getAllProjects()) {
+            isPresent = false;
+            for (Project projectsInEmployee : employee.getProjects()) {
+                if (project.getId() == projectsInEmployee.getId()) {
+                    isPresent = true;
+                }
+            }
+            if (false == isPresent) {
+                availableProjects.add(project);
+            }
+        }
+        return availableProjects;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+	@Override
+	public List<Employee> getAllEmployees() {
+		return employeeDao.getAllEmployees(false);
+	}
+	
+    /**
+     * {@inheritDoc}
+     */
+	@Override
+	public List<Employee> getDeletedEmployees() {
+		return employeeDao.getAllEmployees(true);
+	}
     
     /**
      * {@inheritDoc}
@@ -247,55 +253,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public boolean checkEmployeeIdPresenceIncludingDeleted(int id) {
         boolean isPresent = false;
-        //Employee employee = employeeDao.retrieveEmployee(id);
         if (null != employeeDao.retrieveEmployee(id)) {
             isPresent = true;
         }
         return isPresent;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<Integer> checkProjectIdPresence(List<Integer> projectIds) {
-        List<Integer> invalidIds = new ArrayList<Integer>();
-        ProjectService projectService = new ProjectServiceImpl();
-        for (Integer projectId : projectIds) {
-            if (false == projectService.checkProjectIdPresence(projectId)) {
-                invalidIds.add(projectId);
-            }
-        }
-        return invalidIds;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<List<Integer>> checkProjectInEmployee(List<Integer> projectIds, 
-                int employeeId) {
-        List<List<Integer>> listOfIds = new ArrayList<List<Integer>>(2);
-        List<Integer> invalidIds = new ArrayList<Integer>();
-        List<Integer> useableIds = new ArrayList<Integer>();
-        Employee employee = employeeDao.retrieveEmployee(employeeId);
-        List<Project> projects = employee.getProjects();
-        for (Integer projectId : projectIds) {
-            boolean isPresent = false;
-            for (Project project : projects) {
-                if (project.getId() == projectId) {
-                    isPresent = true;
-                }
-            }
-            if (isPresent) {
-                invalidIds.add(projectId);
-            } else {
-                useableIds.add(projectId);
-            }
-        }
-        listOfIds.add(invalidIds);
-        listOfIds.add(useableIds);
-        return listOfIds;
     }
 
     /**
@@ -320,54 +281,5 @@ public class EmployeeServiceImpl implements EmployeeService {
             date = null;
         }
         return date;
-    }
-    
-    public void assignAProject(int projectId, int employeeId) {
-    	ProjectService projectService = new ProjectServiceImpl();
-    	Employee employee = employeeDao.retrieveEmployee(employeeId);
-    	List<Project> projects = employee.getProjects();
-    	projects.add(projectService.retrieveProject(projectId));
-    	employee.setProjects(projects);
-    	employeeDao.updateEmployee(employee);
-    }
-
-	public List<Project> getAvailableProjects(int employeeId) {
-		boolean isPresent;
-    	List<Project> availableProjects = new ArrayList<Project>();
-    	ProjectService projectService = new ProjectServiceImpl();
-    	Employee employee = employeeDao.retrieveEmployee(employeeId);
-    	for (Project project : projectService.getAll()) {
-    		isPresent = false;
-    		for (Project projectsInEmployee : employee.getProjects()) {
-    			if (project.getId() == projectsInEmployee.getId()) {
-    				isPresent = true;
-    			}
-    		}
-    		if (false == isPresent) {
-    			availableProjects.add(project);
-    		}
-    	}
-    	return availableProjects;
-	}
-
-	public void unassignAProject(int projectId, int employeeId) {
-		Employee employee = employeeDao.retrieveEmployee(employeeId);
-    	List<Project> projects = employee.getProjects();
-    	int indexOfProject = 0;
-        int count=0;
-    	for (Project project : projects) {
-    		count++;
-    		if (projectId == project.getId()) {
-    			indexOfProject = count - 1;
-    		}
-    	}
-    	projects.remove(indexOfProject);
-    	employee.setProjects(projects);
-        employeeDao.updateEmployee(employee);
-	}
-    
-    private String getSpacing() {
-        return ("\n\n--------------------------------------------" 
-                + "------------------------------------------\n\n");
     }
 }

@@ -36,5 +36,5 @@ public interface ProjectDao {
      * Fetches all the projects and returns the list
      * @return         complete list of projects
      */
-    public List<Project> getAllProjects();
+    public List<Project> getAllProjects(boolean isDeleted);
 }

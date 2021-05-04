@@ -15,7 +15,7 @@
       <property name = "manager" column = "project_manager" type = "string"/>
       <property name = "department" column = "department" type = "string"/>
       <property name = "isDeleted" column = "is_deleted" type = "boolean"/>
-      <bag name="employees" table="project_employees"  lazy="false">
+      <bag name="employees" table="project_employees">
       	<key column="project_id"/>
       	<many-to-many column="employee_id" class="com.ideas2it.employeeManagement.model.Employee"/>
       </bag>

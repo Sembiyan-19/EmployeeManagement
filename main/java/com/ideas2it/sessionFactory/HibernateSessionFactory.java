@@ -5,16 +5,16 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.SessionFactory;
 
 
-public class SessionFactoryImpl {  
+public class HibernateSessionFactory {  
 
     private static SessionFactory sessionFactory = null;
-    private static SessionFactoryImpl instance = null;
+    private static HibernateSessionFactory instance = null;
 
-    private SessionFactoryImpl() {  }
+    private HibernateSessionFactory() {  }
     
-    public static SessionFactoryImpl getInstance() {
+    public static HibernateSessionFactory getInstance() {
         if (null == instance) {
-            instance = new SessionFactoryImpl();
+            instance = new HibernateSessionFactory();
         }
         return instance;
     }
@@ -23,7 +23,7 @@ public class SessionFactoryImpl {
         try {
             if (null == sessionFactory) {
                 try {
-					sessionFactory = new Configuration().configure().buildSessionFactory();
+					sessionFactory = new Configuration().configure("hibernate/properties/hibernate.cfg.xml").buildSessionFactory();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

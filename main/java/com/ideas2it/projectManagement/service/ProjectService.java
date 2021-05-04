@@ -31,14 +31,6 @@ public interface ProjectService {
      * Retrieves the project details such as project Id, name, manager,
      * department, and list of employees
      * @param projectId          Id of the project which has to be retrieved
-     * @return         details of the project in string format
-     */
-    public String retrieveProjectDetails(int projectId);
-
-    /**
-     * Retrieves the project details such as project Id, name, manager,
-     * department, and list of employees
-     * @param projectId          Id of the project which has to be retrieved
      * @return         the project object
      */
     public Project retrieveProject(int projectId);
@@ -51,6 +43,14 @@ public interface ProjectService {
      */
     public boolean deleteProject(int projectId);
 
+    /**
+     * Restores a project which is deleted
+     * @param projectId          Id of the project which has to be restored
+     * @return        
+     *     true if project is successfully restored else returns false
+     */
+    public boolean restoreProject(int projectId);
+    
     /**
      * Updates the project details such as project name, manager,
      * and department
@@ -66,36 +66,50 @@ public interface ProjectService {
                 String projectManager, String department);
 
     /**
-     * Assigns employees to a project
+     * Assigns employee for a project
      * @param projectId
-     *     Id of the project to which the employees has to be assigned
-     * @param employeeIds
-     *     employee ids which has to be assigned for the project
-     * @return  
-     *     true if employees are succesfully assigned else returns false
+     *     Id of project to which the employee has to be assigned
+     * @param employeeId
+     *     Id of the employee who has to be assigned for the project
+     * @return         
+     *     true if employee is successfully assigned for the project,
+     * else returns false
      */
-    public boolean assignEmployees(int projectId, List<Integer> employeeIds);
+    public void assignAEmployee(int projectId, int employeeId);
 
     /**
-     * Unassigns employees from the project
+     * Unssigns employee for a project
      * @param projectId
-     *     Id of the project from which the employees has to be unassigned
-     * @param employeeIds
-     *     employee ids which has to be unassigned from the project
-     * @return  
-     *     true if employees are succesfully unassigned else returns false
+     *     Id of project from which the employee has to be unassigned
+     * @param employeeId
+     *     Id of the employee who has to be unassigned for the project
+     * @return         
+     *     true if employee is successfully unassigned from the project,
+     * else returns false
      */
-    public boolean unassignEmployees(int projectId, List<Integer> employeeIds);
+    public void unassignAEmployee(int projectId, int employeeId);
 
     /**
      * Fetches the list of projects, converts them to string format,
      * adds them to a list and returns the list
      * @return         complete list of projects
      */
-    public List<String> getAllProjects();
+    public List<Project> getAllProjects();
+    
+    /**
+     * Fetches the list of projects which are deleted
+     * @return         complete list of projects which are deleted
+     */
+    public List<Project> getDeletedProjects();
 
-    public void unassignAEmployee(int projectId, int employeeId);
-    public List<Project> getAll();
+    /**
+     * Gets the employees who can be assigned for a project
+     * @param projectId
+     *     Id of project
+     * @return         
+     *     list of employees who can be assigned for a project
+     */
+    public List<Employee> getAvailableEmployees(int projectId);
     
     /**
      * Checks the presence of project id
@@ -112,31 +126,4 @@ public interface ProjectService {
      *     true if project id is present else returns false
      */
     public boolean checkProjectIdPresenceWithDeleted(int projectId);
-
-    /**
-     * Check@Override
-	s the presence of employees in a project
-     * @param employeeIds          ID of employees which has to be checked
-     * @return
-     *     Ids which are not present in the project
-     */
-    public List<Integer> checkEmployeesPresence(List<Integer> employeeIds);
-
-    /**
-     * Checks the presence of projects in a employee
-     * @param projectId 
-     *     Id of the project@Override
-	 from which the employees Ids
-     * has to checked         
-     * @param employeeIds         list of employee Ids which has to be checked
-     * @return
-     *    Two lists; one containing Ids which are present and another
-     * containing Ids which are not present
-     */
-    public List<List<Integer>> checkEmployeesInProject(int projectId,
-            List<Integer> employeeIds);
-
-	public List<Employee> getAvailableEmployees(int projectId);
-
-	public void assignAEmployee(int projectId, int employeeId);
 }

@@ -36,22 +36,6 @@ public class ProjectServiceImpl implements ProjectService {
      * {@inheritDoc}
      */
     @Override
-    public String retrieveProjectDetails(int projectId) {
-        String employeesAssociated = "\n\nEmployees associated: ";
-        Project project = projectDao.retrieveProject(projectId);
-        for (Employee employee : project.getEmployees()) {
-            employeesAssociated = employeesAssociated + employee.getId() 
-                    + "  --->  " + employee.getName() 
-                    + "\n                      ";
-        }
-        return (getSpacing() + project.toString() + employeesAssociated
-                + getSpacing());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Project retrieveProject(int projectId) {
         return projectDao.retrieveProject(projectId);
     }
@@ -71,6 +55,16 @@ public class ProjectServiceImpl implements ProjectService {
      * {@inheritDoc}
      */
     @Override
+    public boolean restoreProject(int projectId) {
+        Project project = projectDao.retrieveProject(projectId);
+        project.setIsDeleted(false);
+        return projectDao.updateProject(project);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public boolean updateProject(int projectId, String projectName,
                 String projectManager, String department) {
         Project project = projectDao.retrieveProject(projectId);
@@ -85,45 +79,11 @@ public class ProjectServiceImpl implements ProjectService {
         }
         return projectDao.updateProject(project);
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean assignEmployees(int projectId, List<Integer> employeeIds) {
-        EmployeeService employeeService = new EmployeeServiceImpl();
-        Project project = projectDao.retrieveProject(projectId);
-		List<Employee> employees = project.getEmployees();
-        for (Integer employeeId : employeeIds) {
-            employees.add(employeeService.retrieveEmployee(employeeId));
-        }
-		project.setEmployees(employees);
-        return projectDao.updateProject(project);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean unassignEmployees(int projectId,
-            List<Integer> employeeIds) {
-        Project project = projectDao.retrieveProject(projectId);
-        List<Employee> employees = project.getEmployees();
-        for (Integer employeeId : employeeIds) {
-            int indexOfEmployee = 0;
-            int count=0;
-            for (Employee employee : employees) {
-                count++;
-                if (employee.getId() == employeeId) {
-                    indexOfEmployee = count - 1;
-                }
-            }
-            employees.remove(indexOfEmployee);
-        }
-		project.setEmployees(employees);
-        return projectDao.updateProject(project);
-    }
     
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void assignAEmployee(int projectId, int employeeId) {
     	EmployeeService employeeService = new EmployeeServiceImpl();
         Project project = projectDao.retrieveProject(projectId);
@@ -152,26 +112,21 @@ public class ProjectServiceImpl implements ProjectService {
     	project.setEmployees(employees);
         projectDao.updateProject(project);
     }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<String> getAllProjects() {
-        List<String> projects = new ArrayList<String>();
-        for (Project project : projectDao.getAllProjects()) {
-            projects.add(project.toString());
-        }
-        System.out.println(projects);
-        return projects;
-    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<Project> getAll() {
-        return projectDao.getAllProjects();
+    public List<Project> getAllProjects() {
+        return projectDao.getAllProjects(false);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Project> getDeletedProjects() {
+        return projectDao.getAllProjects(true);
     }
     
     /**
@@ -205,52 +160,12 @@ public class ProjectServiceImpl implements ProjectService {
      * {@inheritDoc}
      */
     @Override
-    public List<Integer> checkEmployeesPresence(List<Integer> employeeIds) {
-        List<Integer> invalidIds = new ArrayList<Integer>();
-        EmployeeService employeeService = new EmployeeServiceImpl();
-        for (Integer employeeId : employeeIds) {
-            if (false == employeeService.checkEmployeeIdPresence(employeeId)) {
-                invalidIds.add(employeeId);
-            }
-        }
-        return invalidIds;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<List<Integer>> checkEmployeesInProject(int projectId,
-            List<Integer> employeeIds) {
-        List<List<Integer>> listOfIds = new ArrayList<List<Integer>>(2);
-        List<Integer> idsPresent = new ArrayList<Integer>();
-        List<Integer> useableIds = new ArrayList<Integer>();
-        Project project = projectDao.retrieveProject(projectId);
-        List<Employee> employees = project.getEmployees();
-        for (Integer employeeId : employeeIds) {
-            boolean isPresent = false;
-            for (Employee employee : employees) {
-                if (employee.getId() == employeeId) {
-                    isPresent = true;
-                }
-            }
-            if (isPresent) {
-                idsPresent.add(employeeId);
-            } else {
-                useableIds.add(employeeId);
-            }
-        }
-        listOfIds.add(idsPresent);
-        listOfIds.add(useableIds);
-        return listOfIds;
-    }
-
     public List<Employee> getAvailableEmployees(int projectId) {
     	boolean isPresent;
     	List<Employee> availableEmployees = new ArrayList<Employee>();
     	EmployeeService employeeService = new EmployeeServiceImpl();
     	Project project = projectDao.retrieveProject(projectId);
-    	for (Employee employee : employeeService.getAll()) {
+    	for (Employee employee : employeeService.getAllEmployees()) {
     		isPresent = false;
     		for (Employee employeeInProject : project.getEmployees()) {
     			if (employee.getId() == employeeInProject.getId()) {
@@ -262,10 +177,5 @@ public class ProjectServiceImpl implements ProjectService {
     		}
     	}
     	return availableEmployees;
-    }
-    
-    private String getSpacing() {
-        return ("\n\n--------------------------------------------" 
-                + "------------------------------------------\n\n");
     }
 }

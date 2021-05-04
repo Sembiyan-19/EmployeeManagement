@@ -42,5 +42,5 @@ public interface EmployeeDao {
      * Fetches all the employees adds and returns the list
      * @return         complete list of employees
      */
-    public List<Employee> getAllEmployees();
+    public List<Employee> getAllEmployees(boolean isDeleted);
 }
