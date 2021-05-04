@@ -235,6 +235,7 @@ public class ProjectController extends HttpServlet {
 	 */
 	private void createNewProject(HttpServletRequest request,
             HttpServletResponse response) {
+		request.setAttribute("operation", "insert");
         RequestDispatcher requestDispatcher 
                 = request.getRequestDispatcher("projectForm.jsp");
         try {
@@ -255,6 +256,7 @@ public class ProjectController extends HttpServlet {
             HttpServletResponse response) {
         int id = Integer.parseInt(request.getParameter("id"));
         Project project = projectService.retrieveProject(id);
+        request.setAttribute("operation", "update");
         request.setAttribute("project", project);
         RequestDispatcher requestDispatcher 
                 = request.getRequestDispatcher("projectForm.jsp");

@@ -7,14 +7,8 @@
     <title>Edit Project</title>
   </head>
   <body>
-	<c:if test="${project != null}">
-	  <form action="project?action=update" method="post">
-		Employee id: <input type = "number" name = "id" value = "${project.id}" required readonly><br><br>
-	</c:if>
-	<c:if test="${project == null}">
-	  <form action="project?action=insert" method = "post">
-	    Employee id: <input type = "number" name = "id" value = "${project.id}" required><br><br>
-	</c:if>
+	<form action="project?action=${operation}" method = "post">
+	  Project id: <input type = "number" name = "id" value = "${project.id}" required <c:if test="${project != null}"> <c:out value="${'readonly'}"/> </c:if>><br><br>
 	  Project name: <input type = "text" name = "name" value = "${project.name}" required><br><br>
 	  Project manager: <input type = "text" name = "manager" value = "${project.manager}" required><br><br>
 	  Department: <input type = "text" name = "department" value = "${project.department}" required><br><br>

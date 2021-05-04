@@ -5,23 +5,23 @@
 	http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
 	id="WebApp_ID" version="3.1">
   <servlet>
-    <servlet-name>projectC</servlet-name>
+    <servlet-name>projectController</servlet-name>
     <servlet-class>
 	  com.ideas2it.projectManagement.controller.ProjectController
 	</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>projectC</servlet-name>
+    <servlet-name>projectController</servlet-name>
     <url-pattern>/project</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>employeeC</servlet-name>
+    <servlet-name>employeeController</servlet-name>
     <servlet-class>
       com.ideas2it.employeeManagement.controller.EmployeeController
 	</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>employeeC</servlet-name>
+    <servlet-name>employeeController</servlet-name>
     <url-pattern>/employee</url-pattern>
   </servlet-mapping>
 </web-app>

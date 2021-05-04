@@ -29,7 +29,7 @@ import com.ideas2it.projectManagement.model.Project;
 public class EmployeeController extends HttpServlet {
 	
 	private EmployeeService employeeService = new EmployeeServiceImpl();
-       
+      
 	/**
      * 
      * @param request
@@ -325,6 +325,7 @@ public class EmployeeController extends HttpServlet {
 	 */
 	private void createNewEmployee(HttpServletRequest request,
 		        HttpServletResponse response) {
+		request.setAttribute("operation", "insert");
 		RequestDispatcher requestDispatcher 
 		        = request.getRequestDispatcher("employeeForm.jsp");
     	try {
@@ -345,6 +346,7 @@ public class EmployeeController extends HttpServlet {
 		        HttpServletResponse response) {
 		int id = Integer.parseInt(request.getParameter("id"));
     	Employee employee = employeeService.retrieveEmployee(id);
+    	request.setAttribute("operation", "update");
     	request.setAttribute("employee", employee);
     	RequestDispatcher requestDispatcher 
     	        = request.getRequestDispatcher("employeeForm.jsp");

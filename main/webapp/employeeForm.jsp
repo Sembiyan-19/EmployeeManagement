@@ -7,23 +7,13 @@
   <title>Edit Employee</title>
 </head>
 <body>
-  <c:if test="${employee != null}">
-	<form action="employee?action=update" method="post">
-	  Employee id: <input type = "number" name = "id" value = "${employee.id}" required readonly><br><br>
+	<form action="employee?action=${operation}" method="post">
+	  Employee id: <input type = "number" name = "id" value = "${employee.id}" required <c:if test="${employee != null}"> <c:out value="${'readonly'}"/> </c:if>><br><br>
 	  Employee name: <input type = "text" name = "name" value = "${employee.name}" required><br><br>
       Salary: <input type = "text" name = "salary" value = "${employee.salary}" required><br><br>
       Mobile number: <input type = "text" name = "mobileNumber" value = "${employee.mobileNumber}" required pattern="[6789][0-9]{9}"><br><br>
       Date of birth: <input type = "date" name = "dateOfBirth" value = "${employee.dateOfBirth}" required><br><br>
-      <input type = "submit">
-    </form>
-  </c:if>
-  <c:if test="${employee == null}">
-	<form action="employee?action=insert" method = "post">
-	  Employee id: <input type = "number" name = "id" required><br><br>
-	  Employee name: <input type = "text" name = "name" required><br><br>
-      Salary: <input type = "text" name = "salary" required><br><br>
-      Mobile number: <input type = "text" name = "mobileNumber" required><br><br>
-      Date of birth: <input type = "date" name = "dateOfBirth" required><br><br>
+     <c:if test="${employee == null}">
       permanent address: <input type = "text" name = "doorNumber" placeholder = "door number" required>
         <input type = "text" name = "street"  placeholder = "street" required>
         <input type = "text" name = "city"  placeholder = "city" required>
@@ -36,9 +26,9 @@
         <input type = "text" name = "pincodeO"  placeholder = "pincode" required>
         <input type = "text" name = "stateO"  placeholder = "state" required>
         <input type = "text" name = "countryO"  placeholder = "country" required><br><br>
+      </c:if>
       <input type = "submit"> 
 	</form>
-  </c:if>
   <br><br><br>
   <c:if test="${employee != null}">
 	<a href="employee?action=view&id=${employee.id}"><button>Back</button></a>
