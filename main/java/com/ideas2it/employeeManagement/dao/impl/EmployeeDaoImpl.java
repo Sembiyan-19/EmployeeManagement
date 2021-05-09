@@ -2,18 +2,17 @@
 package com.ideas2it.employeeManagement.dao.impl;
 
 import java.util.List;
-//import org.hibernate.Criteria;
-//import org.hibernate.criterion.Restrictions;
-import org.hibernate.query.Query;
 import org.hibernate.Criteria;
-//import org.hibernate.Query;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 import com.ideas2it.employeeManagement.dao.EmployeeDao;
-import com.ideas2it.employeeManagement.model.Address;
 import com.ideas2it.employeeManagement.model.Employee;
+import com.ideas2it.employeeManagementException.EmployeeManagementException;
+import com.ideas2it.logger.LoggerClass;
+import com.ideas2it.projectManagement.dao.impl.ProjectDaoImpl;
 import com.ideas2it.sessionFactory.HibernateSessionFactory;
 
 /**
@@ -24,13 +23,16 @@ import com.ideas2it.sessionFactory.HibernateSessionFactory;
  */
 public class EmployeeDaoImpl implements EmployeeDao {
 
-    private HibernateSessionFactory singleton = HibernateSessionFactory.getInstance();
+    private HibernateSessionFactory singleton 
+            = HibernateSessionFactory.getInstance();
+    private LoggerClass logger = new LoggerClass(EmployeeDaoImpl.class);
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean insertEmployee(Employee employee) {
+    public boolean insertEmployee(Employee employee) 
+            throws EmployeeManagementException {
         boolean isAdded = true;
         Session session = null;
         try {
@@ -39,9 +41,11 @@ public class EmployeeDaoImpl implements EmployeeDao {
             session.beginTransaction();
             session.save(employee);
             session.getTransaction().commit();
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             session.getTransaction().rollback();
             isAdded = false;
+            logger.errorLogger(e.getMessage());
+            throw new EmployeeManagementException("Failed to add employee");
         } finally {
             session.close();
         }
@@ -52,17 +56,21 @@ public class EmployeeDaoImpl implements EmployeeDao {
      * {@inheritDoc}
      */
     @Override
-    public Employee retrieveEmployee(int id) {
+    public Employee retrieveEmployee(int id) 
+            throws EmployeeManagementException {
         Employee employee = null;
         Session session = null;
         try {
             SessionFactory sessionFactory = singleton.getSessionFactory();
             session = sessionFactory.openSession();
             employee = (Employee) session.get(Employee.class, id);
-            employee.getAddresses().size();
-            employee.getProjects().size();
-        } catch (Exception e) {
-            System.out.println(e);
+            if (null != employee) {
+            	employee.getAddresses().size();
+            	employee.getProjects().size();	
+            }
+        } catch (HibernateException e) {
+        	logger.errorLogger(e.getMessage());
+        	throw new EmployeeManagementException("Failed to retrieve employee");
         } finally {
             session.close();
         }
@@ -73,7 +81,8 @@ public class EmployeeDaoImpl implements EmployeeDao {
      * {@inheritDoc}
      */
     @Override
-    public boolean updateEmployee(Employee employee) {
+    public boolean updateEmployee(Employee employee) 
+            throws EmployeeManagementException {
         boolean isUpdated = true;
         Session session = null;
         try {
@@ -82,9 +91,11 @@ public class EmployeeDaoImpl implements EmployeeDao {
             session.beginTransaction();
             session.update(employee);
             session.getTransaction().commit();
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             session.getTransaction().rollback();
             isUpdated = false;
+            logger.errorLogger(e.getMessage());
+        	throw new EmployeeManagementException("Failed to update employee");
         } finally {
             session.close();
         }
@@ -95,7 +106,8 @@ public class EmployeeDaoImpl implements EmployeeDao {
      * {@inheritDoc}
      */
     @Override
-    public List<Employee> getAllEmployees(boolean isDeleted) {
+    public List<Employee> getAllEmployees(boolean isDeleted) 
+            throws EmployeeManagementException {
         List<Employee> employees = null;
         Session session = null;
         try {
@@ -106,7 +118,8 @@ public class EmployeeDaoImpl implements EmployeeDao {
             criteria.add(Restrictions.eq("isDeleted", isDeleted));
             employees = criteria.list();
         } catch (Exception e) {
-            System.out.println(e);
+        	logger.errorLogger(e.getMessage());
+        	throw new EmployeeManagementException("Failed to retrieve employees");
         } finally {
             session.close();
         }

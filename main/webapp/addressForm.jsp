@@ -8,7 +8,7 @@
     <title>Edit Address</title>
 </head>
 <body>
-  <form action="employee?action=updateAddress&id=${id}&option=${option}" method="post">
+  <form action="employee?action=${operation}&id=${id}&option=${option}" method="post">
     Door number: <input type = "text" name = "doorNumber" value = "${address.doorNumber}" required><br><br>
     Street: <input type = "text" name = "street"  value = "${address.street}" required><br><br>
     City: <input type = "text" name = "city"  value = "${address.city}" required><br><br>
@@ -18,6 +18,6 @@
     <input type = "submit">
   </form>
   <br><br>
-  <a href = "employee?action=view&id=${id}"><button>Cancel</button></a>
+  <a href = "employee?action=showEmployee&id=${id}"><button>Cancel</button></a>
   </body>
 </html>

@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@ page import = "com.ideas2it.projectManagement.model.Project" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
 <head>
@@ -20,21 +19,15 @@
         <input type = "text" name = "pincode"  placeholder = "pincode" required>
         <input type = "text" name = "state"  placeholder = "state" required>
         <input type = "text" name = "country"  placeholder = "country"><br><br>
-      Optional address: <input type = "text" name = "doorNumberO" placeholder = "door number" required>
-        <input type = "text" name = "streetO"  placeholder = "street" required>
-        <input type = "text" name = "cityO"  placeholder = "city" required>
-        <input type = "text" name = "pincodeO"  placeholder = "pincode" required>
-        <input type = "text" name = "stateO"  placeholder = "state" required>
-        <input type = "text" name = "countryO"  placeholder = "country" required><br><br>
       </c:if>
       <input type = "submit"> 
 	</form>
   <br><br><br>
   <c:if test="${employee != null}">
-	<a href="employee?action=view&id=${employee.id}"><button>Back</button></a>
+	<a href="employee?action=showEmployee&id=${employee.id}"><button>Back</button></a>
   </c:if>
   <c:if test="${employee == null}">
-    <a href="employee?action=showAll"><button>Back</button></a>
+    <a href="employee?action=showAllEmployees"><button>Back</button></a>
   </c:if>
 </body>
 </html>

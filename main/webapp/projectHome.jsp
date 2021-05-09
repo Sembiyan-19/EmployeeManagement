@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@ page import="com.ideas2it.projectManagement.model.Project" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
   <head>
@@ -9,11 +8,11 @@
   <body>
     <a href="project?action=index"><button>Home</button></a>
     <br><br><br>
-	<a href="project?action=new"><button>Add New Project</button></a>
+	<a href="project?action=createProject"><button>Add New Project</button></a>
 	<br><br>
 	<div align="right">
-	  <form action="project?action=view" method="post">
-		View a project: <input type="text" name=id required>
+	  <form action="project?action=showProject" method="post">
+		View a project: <input type="number" name=id required>
 		<input type="submit">
 	  </form>
 	<br>
@@ -34,12 +33,12 @@
 			<td><c:out value="${project.name}" /></td>
 			<td><c:out value="${project.department}" /></td>
 			<td>
-			  <a href="project?action=view&id=<c:out value='${project.id}' />">
+			  <a href="project?action=showProject&id=<c:out value='${project.id}' />">
 			    View
 			  </a>
 			</td>
 			<td>
-			  <a href="project?action=delete&id=<c:out value='${project.id}' />">
+			  <a href="project?action=deleteProject&id=<c:out value='${project.id}' />">
 			    Delete
 			  </a>
 			</td>
@@ -47,7 +46,7 @@
 		</c:forEach>
 	</table>
 	<br><br><br>
-	<div align="center"><a href="project?action=viewDeletedProjects"><button>Restore project</button></a></div>
+	<div align="center"><a href="project?action=showDeletedProjects"><button>Restore project</button></a></div>
 	<a href="project?action=index"><button>Back</button></a>
   </body>
 </html>

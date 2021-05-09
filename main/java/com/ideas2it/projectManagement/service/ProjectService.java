@@ -2,9 +2,9 @@
 package com.ideas2it.projectManagement.service;
 
 import java.util.List;
-import java.util.Map;
 
 import com.ideas2it.employeeManagement.model.Employee;
+import com.ideas2it.employeeManagementException.EmployeeManagementException;
 import com.ideas2it.projectManagement.model.Project;
 
 /**
@@ -23,33 +23,41 @@ public interface ProjectService {
      * @param department          department to which the project is associated
      * @return         
      *     true if details are successfully added else returns false
+     * @throws EmployeeManagementException 
      */
-    public boolean addProject(int projectId, String projectName,
-                String projectManager, String department);
+    public void addProject(int projectId, String projectName,
+            String projectManager, String department) 
+            throws EmployeeManagementException;
 
     /**
      * Retrieves the project details such as project Id, name, manager,
      * department, and list of employees
      * @param projectId          Id of the project which has to be retrieved
      * @return         the project object
+     * @throws EmployeeManagementException 
      */
-    public Project retrieveProject(int projectId);
+    public Project retrieveProject(int projectId) 
+            throws EmployeeManagementException;
 
    /**
      * Deletes a project details
      * @param projectId          Id of the project which has to be deleted
      * @return        
      *     true if details are successfully deleted else returns false
+     * @throws EmployeeManagementException 
      */
-    public boolean deleteProject(int projectId);
+    public void deleteProject(int projectId) 
+            throws EmployeeManagementException;
 
     /**
      * Restores a project which is deleted
      * @param projectId          Id of the project which has to be restored
      * @return        
      *     true if project is successfully restored else returns false
+     * @throws EmployeeManagementException 
      */
-    public boolean restoreProject(int projectId);
+    public void restoreProject(int projectId) 
+            throws EmployeeManagementException;
     
     /**
      * Updates the project details such as project name, manager,
@@ -61,9 +69,11 @@ public interface ProjectService {
      * @param department         updated department for the project
      * @return
      *     true if details are successfully updated else returns false
+     * @throws EmployeeManagementException 
      */
-    public boolean updateProject(int projectId, String projectName,
-                String projectManager, String department);
+    public void updateProject(int projectId, String projectName,
+            String projectManager, String department) 
+            throws EmployeeManagementException;
 
     /**
      * Assigns employee for a project
@@ -74,8 +84,10 @@ public interface ProjectService {
      * @return         
      *     true if employee is successfully assigned for the project,
      * else returns false
+     * @throws EmployeeManagementException 
      */
-    public void assignAEmployee(int projectId, int employeeId);
+    public void assignAEmployee(int projectId, int employeeId) 
+            throws EmployeeManagementException;
 
     /**
      * Unssigns employee for a project
@@ -86,21 +98,27 @@ public interface ProjectService {
      * @return         
      *     true if employee is successfully unassigned from the project,
      * else returns false
+     * @throws EmployeeManagementException 
      */
-    public void unassignAEmployee(int projectId, int employeeId);
+    public void unassignAEmployee(int projectId, int employeeId) 
+            throws EmployeeManagementException;
 
     /**
      * Fetches the list of projects, converts them to string format,
      * adds them to a list and returns the list
      * @return         complete list of projects
+     * @throws EmployeeManagementException 
      */
-    public List<Project> getAllProjects();
+    public List<Project> getAllProjects() 
+            throws EmployeeManagementException;
     
     /**
      * Fetches the list of projects which are deleted
      * @return         complete list of projects which are deleted
+     * @throws EmployeeManagementException 
      */
-    public List<Project> getDeletedProjects();
+    public List<Project> getDeletedProjects() 
+            throws EmployeeManagementException;
 
     /**
      * Gets the employees who can be assigned for a project
@@ -108,22 +126,28 @@ public interface ProjectService {
      *     Id of project
      * @return         
      *     list of employees who can be assigned for a project
+     * @throws EmployeeManagementException 
      */
-    public List<Employee> getAvailableEmployees(int projectId);
+    public List<Employee> getAvailableEmployees(int projectId) 
+            throws EmployeeManagementException;
     
     /**
      * Checks the presence of project id
      * @param projectId          ID of project which has to be checked
      * @return
      *     true if project id is present else returns false
+     * @throws EmployeeManagementException 
      */
-    public boolean checkProjectIdPresence(int projectId);
+    public boolean checkProjectIdPresence(int projectId) 
+            throws EmployeeManagementException;
 
     /**
      * Checks the presence of project id including deleted projects
      * @param projectId          ID of project which has to be checked
      * @return
      *     true if project id is present else returns false
+     * @throws EmployeeManagementException 
      */
-    public boolean checkProjectIdPresenceWithDeleted(int projectId);
+    public boolean checkProjectIdPresenceWithDeleted(int projectId) 
+            throws EmployeeManagementException;
 }

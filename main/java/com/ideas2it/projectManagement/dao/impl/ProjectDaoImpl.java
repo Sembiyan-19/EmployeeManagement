@@ -2,16 +2,18 @@
 package com.ideas2it.projectManagement.dao.impl;
 
 import java.util.List;
-
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
-import com.ideas2it.employeeManagement.model.Employee;
+import com.ideas2it.employeeManagementException.EmployeeManagementException;
+import com.ideas2it.logger.LoggerClass;
 import com.ideas2it.projectManagement.dao.ProjectDao;
 import com.ideas2it.projectManagement.model.Project;
 import com.ideas2it.sessionFactory.HibernateSessionFactory;
+
 
 /**
  * Class which implements Dao interface
@@ -21,14 +23,17 @@ import com.ideas2it.sessionFactory.HibernateSessionFactory;
  */
 public class ProjectDaoImpl implements ProjectDao {
 
-    private HibernateSessionFactory singleton = HibernateSessionFactory.getInstance();
+    private HibernateSessionFactory singleton 
+            = HibernateSessionFactory.getInstance();
+    private LoggerClass logger = new LoggerClass(ProjectDaoImpl.class);
 
+    
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean insertProject(Project project) {
-        boolean isAdded = true;
+    public void insertProject(Project project) 
+            throws EmployeeManagementException {
         Session session = null;
         try {
             SessionFactory sessionFactory = singleton.getSessionFactory();
@@ -38,28 +43,31 @@ public class ProjectDaoImpl implements ProjectDao {
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
-            isAdded = false;
+        	logger.errorLogger(e.getMessage());
+            throw new EmployeeManagementException("Failed to add project");
         } finally {
             session.close();
         }
-        return isAdded;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritDoc} 
      */
     @Override
-    public Project retrieveProject(int projectId) {
+    public Project retrieveProject(int projectId) 
+            throws EmployeeManagementException {
         Project project = null;
         Session session = null;
-        List<Employee> employees = null;
         try {
             SessionFactory sessionFactory = singleton.getSessionFactory();
             session = sessionFactory.openSession();
             project = (Project) session.get(Project.class, projectId);
-            project.getEmployees().size();
-        } catch (Exception e) {
-            System.out.println(e);
+            if (null != project) {
+            	project.getEmployees().size();
+            }
+        } catch (HibernateException e) {
+        	logger.errorLogger(e.getMessage());
+        	throw new EmployeeManagementException("Failed to retrieve project");
         } finally {
             session.close();
         }
@@ -70,8 +78,8 @@ public class ProjectDaoImpl implements ProjectDao {
      * {@inheritDoc}
      */
     @Override
-    public boolean updateProject(Project project) {
-        boolean isUpdated = true;
+    public void updateProject(Project project) 
+            throws EmployeeManagementException {
         Session session = null;
         try {
             SessionFactory sessionFactory = singleton.getSessionFactory();
@@ -81,18 +89,19 @@ public class ProjectDaoImpl implements ProjectDao {
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
-            isUpdated = false;
+            logger.errorLogger(e.getMessage());
+            throw new EmployeeManagementException("Failed to update project");
         } finally {
             session.close();
         }
-        return isUpdated;
     }
     
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<Project> getAllProjects(boolean isDeleted) {
+    public List<Project> getAllProjects(boolean isDeleted) 
+            throws EmployeeManagementException {
         List<Project> projects = null;
         Session session = null;
         try {
@@ -103,7 +112,8 @@ public class ProjectDaoImpl implements ProjectDao {
             criteria.add(Restrictions.eq("isDeleted", isDeleted));
             projects = criteria.list();
         } catch (Exception e) {
-            System.out.println(e);
+        	logger.errorLogger(e.getMessage());
+        	throw new EmployeeManagementException("Failed to load projects");
         } finally {
             session.close();
         }

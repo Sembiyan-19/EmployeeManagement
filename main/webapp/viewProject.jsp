@@ -50,7 +50,7 @@
 	    <td><%= employee.getId() %></td>
 	    <td><%= employee.getName() %></td>
 	    <td>
-	      <a href = "project?action=unassign&projectId=<%=
+	      <a href = "project?action=unassignEmployee&projectId=<%=
 	          project.getId() %>&employeeId=<%= employee.getId() %>">
 	        <button>Unassign</button>
 	      </a>
@@ -63,13 +63,13 @@
 	<a href = "project?action=showAvailableEmployees&id=<%= project.getId() %>">
 	  <button>Assign employees</button>
 	</a>
-	<a href = "project?action=delete&id=<%= project.getId() %>">
+	<a href = "project?action=deleteProject&id=<%= project.getId() %>">
 	  <button>Delete</button>
 	</a>
-	<a href = "project?action=edit&id=<%= project.getId() %>">
+	<a href = "project?action=editProject&id=<%= project.getId() %>">
 	  <button>Edit</button>
 	</a>
-	<a href="project?action=showAll"><button>Back</button></a>
+	<a href="project?action=showAllProjects"><button>Back</button></a>
     <br><br><br>
     <% 
         List<Employee> availableEmployees 
@@ -86,7 +86,7 @@
 	    <td><%= employee.getId() %></td>
 	    <td><%= employee.getName() %></td>
 	    <td>
-	      <a href = "project?action=assign&projectId=<%=
+	      <a href = "project?action=assignEmployee&projectId=<%=
 	          project.getId() %>&employeeId=<%= employee.getId() %>">
 	      	<button>Assign</button>
 	      </a>

@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@ page import="com.ideas2it.employeeManagement.model.Employee" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <html>
    <head>
@@ -9,10 +8,10 @@
   <body>
     <a href="employee?action=index"><button>Home</button></a>
     <br><br><br>
-	<a href="employee?action=new"><button>Add New employee</button></a>
+	<a href="employee?action=createEmployee"><button>Add New employee</button></a>
 	<br><br>
 	<div align="right">
-	  <form action="employee?action=view" method="post">
+	  <form action="employee?action=showEmployee" method="post">
 		View a Employee: <input type="text" name="id">
 		<input type="submit">
 	  </form><br>
@@ -36,12 +35,12 @@
 			<td><c:out value="${employee.mobileNumber}" /></td>
 			<td><c:out value="${employee.dateOfBirth}" /></td>
 			<td>
-			  <a href="employee?action=view&id=<c:out value='${employee.id}' />">
+			  <a href="employee?action=showEmployee&id=<c:out value='${employee.id}' />">
 			    View
 			  </a>
 			</td>
 			<td>
-			  <a href="employee?action=delete&id=<c:out value='${employee.id}' />">
+			  <a href="employee?action=deleteEmployee&id=<c:out value='${employee.id}' />">
 			    Delete
 			  </a>
 			</td>

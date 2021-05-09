@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.ideas2it.employeeManagement.model.Employee;
+import com.ideas2it.employeeManagementException.EmployeeManagementException;
 import com.ideas2it.projectManagement.model.Project;
 
 /**
@@ -25,16 +26,19 @@ public interface EmployeeService {
      * @param dateOfBirth          date of birth of the employee
      * @param addresses         list containing addresses
      * @return         true is details are successfully added else returns false
+     * @throws EmployeeManagementException 
      */
     public boolean addEmployee(int id, String name, float salary,
-            String mobileNumber, Date dateOfBirth, List<List<String>> addresses);
+            String mobileNumber, Date dateOfBirth, List<String> address) 
+            throws EmployeeManagementException;
 
     /**
      * Retrieves the employee object
      * @param id          employee id whose details should be retrieved
      * @return            returns employee object
+     * @throws EmployeeManagementException 
      */
-    public Employee retrieveEmployee(int id);
+    public Employee retrieveEmployee(int id) throws EmployeeManagementException;
 
      /**
      * Removes a employee's employees
@@ -42,16 +46,18 @@ public interface EmployeeService {
      * @return
      *     true if employee's details are successfully deleted
      * else returns false
+     * @throws EmployeeManagementException 
      */
-    public boolean deleteEmployee(int id);
+    public boolean deleteEmployee(int id) throws EmployeeManagementException;
 
     /**
      * Restores a deleted employee
      * @param id          Id of the employee who has to be restored
      * @return        
      *     true if employee is successfully restored else returns false
+     * @throws EmployeeManagementException 
      */
-    public boolean restoreEmployee(int id);
+    public boolean restoreEmployee(int id) throws EmployeeManagementException;
     
     /**
      * Updates the employee details such as  name, salary, mobile number,
@@ -63,9 +69,11 @@ public interface EmployeeService {
      * @param dateOfBirth          date of birth of the employee
      * @return         
      *     true if details are successfully updated else returns false
+     * @throws EmployeeManagementException 
      */
     public boolean updateEmployee(int id, String name, float salary,
-                String mobileNumber, Date dateOfBirth);
+            String mobileNumber, Date dateOfBirth) 
+            throws EmployeeManagementException;
 
     /**
      * Adds new address to the employee
@@ -73,8 +81,10 @@ public interface EmployeeService {
      * @param addressDetails        list containg an address' details
      * @return
      *     true if a new address is successfully added else returns false
+     * @throws EmployeeManagementException 
      */
-    public boolean addNewAddress(int id, List<String> addressDetails);
+    public boolean addNewAddress(int id, List<String> addressDetails) 
+            throws EmployeeManagementException;
 
     /**
      * Deletes a particular address of a employee
@@ -83,8 +93,10 @@ public interface EmployeeService {
      *         Option that points the address which has to be deleted
      * @return
      *     true if a address is successfully deleted else returns false
+     * @throws EmployeeManagementException 
      */
-    public boolean deleteExistingAddress(int id, int selectedAddressOption);
+    public boolean deleteExistingAddress(int id, int selectedAddressOption) 
+            throws EmployeeManagementException;
 
     /**
      * Updates the mobile number of the employee
@@ -100,23 +112,28 @@ public interface EmployeeService {
      * @param state          state of the employee
      * @param country          country of the employee
      * @param addressType        type of address
+     * @throws EmployeeManagementException 
      */
     public boolean updateExistingAddress(int id, int selectedAddressOption, 
             String doorNumber, String street, String city, String pincode,
-            String state, String country, String addressType);
+            String state, String country, String addressType) 
+            throws EmployeeManagementException;
 
     /**
      * Retrieves all the addresses of an employee
      * @param id         ID of the employee whose addresses should be retrieved
      * @return           list of address
+     * @throws EmployeeManagementException 
      */
-    public List<Employee> getAllEmployees();
+    public List<Employee> getAllEmployees() throws EmployeeManagementException;
 
     /**
      * Fetches the list of employees which are deleted
      * @return         complete list of employees which are deleted
+     * @throws EmployeeManagementException 
      */
-    public List<Employee> getDeletedEmployees();
+    public List<Employee> getDeletedEmployees() 
+            throws EmployeeManagementException;
     
     /**
      * Assigns project for a employee
@@ -127,8 +144,10 @@ public interface EmployeeService {
      * @return         
      *     true if project is successfully assigned for a employee,
      * else returns false
+     * @throws EmployeeManagementException 
      */
-    public void assignAProject(int projectId, int employeeId);
+    public void assignAProject(int projectId, int employeeId) 
+            throws EmployeeManagementException;
 
     /**
      * Unassigns project for a employee
@@ -139,8 +158,10 @@ public interface EmployeeService {
      * @return         
      *     true if project is successfully unassigned for a employee,
      * else returns false
+     * @throws EmployeeManagementException 
      */
-    public void unassignAProject(int projectId, int employeeId);
+    public void unassignAProject(int projectId, int employeeId) 
+            throws EmployeeManagementException;
 
     /**
      * Gets the projects which can be assigned for a employee
@@ -148,16 +169,20 @@ public interface EmployeeService {
      *     Id of employee
      * @return         
      *     list of projects which can be assigned for the employee
+     * @throws EmployeeManagementException 
      */
-    public List<Project> getAvailableProjects(int employeeId);
+    public List<Project> getAvailableProjects(int employeeId) 
+            throws EmployeeManagementException;
 
     /**
      * Checks the presence of employee
      * @param id          ID of employee which has to be checked
      * @return
      *     true if Id is present else returns false
+     * @throws EmployeeManagementException 
      */
-    public boolean checkEmployeeIdPresence(int id);
+    public boolean checkEmployeeIdPresence(int id) 
+            throws EmployeeManagementException;
 
     /**
      * Checks the presence of employee icluding the ids which are 
@@ -165,8 +190,10 @@ public interface EmployeeService {
      * @param id          ID of employee which has to be checked
      * @return
      *     true if Id is present else returns false
+     * @throws EmployeeManagementException 
      */
-    public boolean checkEmployeeIdPresenceIncludingDeleted(int id);
+    public boolean checkEmployeeIdPresenceIncludingDeleted(int id) 
+            throws EmployeeManagementException;
 
     /**
      * Checks whether the mobile number is valid.
@@ -180,6 +207,8 @@ public interface EmployeeService {
      * @param dateOfBirth             date of birth in string format
      * @return      
      *     the date if it is valid, else return null if the date is not valid
+     * @throws EmployeeManagementException 
      */
-    public Date getDateOfBirth(String dateOfBirth);
+    public Date getDateOfBirth(String dateOfBirth) 
+            throws EmployeeManagementException;
 }

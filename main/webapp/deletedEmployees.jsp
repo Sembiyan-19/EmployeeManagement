@@ -19,7 +19,7 @@
 			<td><c:out value="${employee.id}" /></td>
 			<td><c:out value="${employee.name}" /></td>
 			<td>
-			  <a href="employee?action=restore&id=<c:out value='${employee.id}' />">
+			  <a href="employee?action=restoreEmployee&id=<c:out value='${employee.id}' />">
 			    <button>Restore</button>
 			  </a>
 			</td>
